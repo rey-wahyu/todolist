@@ -1,6 +1,5 @@
 .todos-single {
     display: flex;
-    align-items: center;
     border-radius: 5px;
     padding: 20px;
     margin-top: 15px;
@@ -30,11 +29,11 @@
     cursor: pointer;
 }
 
-@media (max-width: 1200px) {
+/* @media (max-width: 1200px) {
     .todos-single {
         width: 40%;
     }
-}
+} */
 
 
 @media (max-width: 700px) {
