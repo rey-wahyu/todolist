@@ -3,7 +3,11 @@ import { Todo } from "../../Models";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
 import { Draggable } from "react-beautiful-dnd";
-import "./style.css";
+import { TextField } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { Box } from "@mui/system";
+
+const IMG_URL = "https://1.bp.blogspot.com/-gY1guSlZ3v4/XuYXPDmJZlI/AAAAAAAAGCY/ARvmPMwTTsQ4jChWrcI4zV9aZdidP8wjQCLcBGAsYHQ/s1920/abstrak-gunung-cat-air.jpg";
 
 type Props = {
   index: number;
@@ -12,11 +16,46 @@ type Props = {
   setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 };
 
+const useStyle = makeStyles({
+  todosSingleText: {
+    flex: '1',
+    padding: '5px',
+    border: 'none',
+    fontSize: '20px',
+
+    '&focus': {
+      outline: 'none'
+    }
+  },
+
+  todosSingle: {
+    display: 'flex',
+    alignItems: 'center',
+    borderRadius: '5px',
+    padding: '20px',
+    marginTop: '15px',
+    backgroundImage: `url(${IMG_URL})`,
+    transition: '0.2s',
+
+    '&hover': {
+      boxShadow: '0 0 5px black',
+      transform: 'scale(1.03)'
+    }
+  },
+
+  icon: {
+    marginLeft: '10px',
+    fontSize: '25px',
+    cursor: 'pointer',
+  }
+})
+
 const SingleTodo: React.FC<Props> = ({ index, todo, todos, setTodos }) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [editTodo, setEditTodo] = useState<string>(todo.todo);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const classes = useStyle()
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -50,38 +89,25 @@ const SingleTodo: React.FC<Props> = ({ index, todo, todos, setTodos }) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-          className={`todos-single ${snapshot.isDragging ? "drag" : ""}`}
+          className={`${classes.todosSingle} ${snapshot.isDragging ? "drag" : ""}`}
         >
           {edit ? (
-            <input
-              value={editTodo}
-              onChange={(e) => setEditTodo(e.target.value)}
-              className="todos-single-text"
-              ref={inputRef}
-            />
+            <TextField size="small" value={editTodo} onChange={(e) => setEditTodo(e.target.value)} className={classes.todosSingleText} ref={inputRef}/>
           ) : todo.isDone ? (
-            <s className="todos-single-text">{todo.todo}</s>
+            <Box component="s" className={classes.todosSingleText}>{todo.todo}</Box>
           ) : (
-            <span className="todos-single-text">{todo.todo}</span>
+            <Box component="span" className={classes.todosSingleText}>{todo.todo}</Box>
           )}
-          <div>
-            <span
-              className="icon"
-              onClick={() => {
-                if (!edit && !todo.isDone) {
-                  setEdit(!edit);
-                }
-              }}
-            >
-              <AiFillEdit />
-            </span>
-            <span className="icon" onClick={() => handleDelete(todo.id)}>
-              <AiFillDelete />
-            </span>
-            <span className="icon" onClick={() => handleDone(todo.id)}>
-              <MdDone />
-            </span>
-          </div>
+          <Box component="div">
+            <Box component="span" className={classes.icon} onClick={() => {
+              if (!edit && !todo.isDone) {
+                setEdit(!edit);
+              }
+              }}><AiFillEdit />
+            </Box>
+            <Box component="span" className={classes.icon} onClick={() => handleDelete(todo.id)}><AiFillDelete /></Box>
+            <Box component="span" className={classes.icon} onClick={() => handleDone(todo.id)}><MdDone /></Box>
+          </Box>
         </form>
       )}
     </Draggable>

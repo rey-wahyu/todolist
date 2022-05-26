@@ -1,5 +1,6 @@
 .todos-single {
     display: flex;
+    align-items: center;
     border-radius: 5px;
     padding: 20px;
     margin-top: 15px;

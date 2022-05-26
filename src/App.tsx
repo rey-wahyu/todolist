@@ -1,11 +1,34 @@
+import { Box } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import "./App.css";
 import InputField from "./components/InputField";
 import TodoList from "./components/TodoList";
 import { Todo } from "./Models";
 
+const useStyle = makeStyles({
+  app: {
+    width: '100vw',
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: '#2f74c0',
+    fontFamily: '"Neucha", cursive',
+  },
+
+  heading: {
+    textTransform: 'uppercase',
+    fontSize: '40px',
+    margin: '30px',
+    color: 'white',
+    zIndex: 1,
+    textAlign: 'center'
+  }
+})
+
 const App:React.FC = () => {
+  const classes = useStyle()
   const [todo, setTodo] = useState<string>("");
   const [todos, setTodos] = useState<Array<Todo>>([]);
   const [completedTodos, setCompletedTodos] = useState<Todo[]>([])
@@ -62,11 +85,11 @@ const App:React.FC = () => {
   
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="App">
-        <span className="heading">Taskify</span>
+      <Box component="div" className={classes.app}>
+        <Box component="span" className={classes.heading}>Taskify</Box>
         <InputField todo={todo} setTodo={setTodo} handleAdd={handleAdd}/>
         <TodoList todos={todos} setTodos={setTodos} completedTodos={completedTodos} setCompletedTodos={setCompletedTodos}/>
-      </div>
+      </Box>
     </DragDropContext>
   ) 
 }
