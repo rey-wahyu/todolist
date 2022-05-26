@@ -63,7 +63,7 @@ const InputField: React.FC<Props> = ({ todo, setTodo, handleAdd }) => {
   const classes = useStyles();
 
   return (
-    <form
+    <form data-testid="addTodo"
       className={classes.input} onSubmit={(e) => {
         handleAdd(e);
         inputRef.current?.blur();
