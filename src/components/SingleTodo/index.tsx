@@ -50,9 +50,9 @@ const useStyle = makeStyles({
   }
 })
 
-const SingleTodo: React.FC<Props> = ({ index, todo, todos, setTodos }) => {
+const SingleTodo: React.FC<Props> = (props) => {
   const [edit, setEdit] = useState<boolean>(false);
-  const [editTodo, setEditTodo] = useState<string>(todo.todo);
+  const [editTodo, setEditTodo] = useState<string>(props.todo.todo);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const classes = useStyle()
@@ -62,30 +62,31 @@ const SingleTodo: React.FC<Props> = ({ index, todo, todos, setTodos }) => {
   }, [edit]);
 
   const handleDone = (id: number) => {
-    setTodos(
-      todos.map((todo) =>
+    props.setTodos(
+      props.todos.map((todo) =>
         todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
       )
     );
   };
 
   const handleDelete = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+    props.setTodos(props.todos.filter((todo) => todo.id !== id));
   };
 
   const handleEdit = (e: React.FormEvent, id: number) => {
     e.preventDefault();
-    setTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo } : todo))
+    props.setTodos(
+      props.todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo } : todo))
     );
     setEdit(false);
   };
 
   return (
-    <Draggable draggableId={todo.id.toString()} index={index}>
+    <Draggable draggableId={props.todo.id.toString()} index={props.index}>
       {(provided, snapshot) => (
         <form
-          onSubmit={(e) => handleEdit(e, todo.id)}
+          data-testid='form-todo'
+          onSubmit={(e) => handleEdit(e, props.todo.id)}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
@@ -93,20 +94,20 @@ const SingleTodo: React.FC<Props> = ({ index, todo, todos, setTodos }) => {
         >
           {edit ? (
             <TextField size="small" value={editTodo} onChange={(e) => setEditTodo(e.target.value)} className={classes.todosSingleText} ref={inputRef}/>
-          ) : todo.isDone ? (
-            <Box component="s" className={classes.todosSingleText}>{todo.todo}</Box>
+          ) : props.todo.isDone ? (
+            <Box component="s" className={classes.todosSingleText}>{props.todo.todo}</Box>
           ) : (
-            <Box component="span" className={classes.todosSingleText}>{todo.todo}</Box>
+            <Box component="span" className={classes.todosSingleText}>{props.todo.todo}</Box>
           )}
           <Box component="div">
-            <Box component="span" className={classes.icon} onClick={() => {
-              if (!edit && !todo.isDone) {
+            <Box data-testid="btn-edit" component="span" className={classes.icon} onClick={() => {
+              if (!edit && !props.todo.isDone) {
                 setEdit(!edit);
               }
               }}><AiFillEdit />
             </Box>
-            <Box component="span" className={classes.icon} onClick={() => handleDelete(todo.id)}><AiFillDelete /></Box>
-            <Box component="span" className={classes.icon} onClick={() => handleDone(todo.id)}><MdDone /></Box>
+            <Box data-testid="btn-delete" component="span" className={classes.icon} onClick={() => handleDelete(props.todo.id)}><AiFillDelete /></Box>
+            <Box data-testid="btn-done" component="span" className={classes.icon} onClick={() => handleDone(props.todo.id)}><MdDone /></Box>
           </Box>
         </form>
       )}

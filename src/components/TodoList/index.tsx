@@ -52,7 +52,7 @@ const TodoList: React.FC<Props> = ({ todos, setTodos, completedTodos, setComplet
   const classes = useStyle()
   return (
     <Box component="div" className={classes.container}>
-      <Droppable droppableId="TodosList">
+      <Droppable data-testid = "active-task" droppableId="TodosList">
         {(provided, snapshot) => (
           <Box component="div" className={`${classes.todos} ${snapshot.isDraggingOver ? `${classes.dragactive}` : ""}`} ref={provided.innerRef} {...provided.droppableProps} >
             <Box component="span" className={classes.todosHeading}>Active Tasks</Box>
@@ -69,7 +69,7 @@ const TodoList: React.FC<Props> = ({ todos, setTodos, completedTodos, setComplet
           </Box>
         )}
       </Droppable>
-      <Droppable droppableId="TodosRemove">
+      <Droppable data-testid = "complete-task" droppableId="TodosRemove">
         {(provided, snapshot) => (
           <Box component="div" ref={provided.innerRef} {...provided.droppableProps} className={`${classes.todos}  ${
             snapshot.isDraggingOver ? `${classes.dragcomplete}` : `${classes.remove}`
