@@ -1,14 +1,42 @@
-import { cleanup, render } from '@testing-library/react';
+import { cleanup } from '@testing-library/react';
+import { shallow, configure } from 'enzyme';
 import TodoList from '../index';
+import Adapter from 'enzyme-adapter-react-16'
+
+configure({ adapter: new Adapter() })
 
 afterEach(cleanup)
 
-const completedTodos = [{id: 1, todo:"test", isDone: false}]
-const todos = [{id: 1, todo:"test", isDone: false}]
+const completedTodos = [{id: Date.now(), todo:"test", isDone: false}]
+const todos = [{id: Date.now(), todo:"test", isDone: false}]
 const setTodos = jest.fn()
 const setCompletedTodos = jest.fn()
 
-it("Should be render", () => {
-    const input = render(<TodoList completedTodos={completedTodos} setCompletedTodos={setCompletedTodos} setTodos={setTodos} todos={todos}/>)
-    console.log(input)
+const props = {
+    completedTodos,
+    todos,
+    setTodos,
+    setCompletedTodos
+}
+
+const wrapper = shallow(<TodoList {...props} />)
+
+describe('Todolist', () => {
+    describe("Rendering", () => {
+        test("Render component", () => {
+            expect(wrapper).toHaveLength(1)
+        })
+        test("Render active task", () => {
+            const activeTask = wrapper.find({ "data-testid": "active-task" })
+            expect(activeTask).toHaveLength(1)
+        })
+        test("Render complete task", () => {
+            const activeTask = wrapper.find({ "data-testid": "complete-task" })
+            expect(activeTask).toHaveLength(1)
+        })
+    })
+
+    test("coba", () => {
+        console.log(wrapper.find({ "data-testid": "complete-task" }).debug())
+    })
 })
